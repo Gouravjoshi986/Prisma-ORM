@@ -1,0 +1,1 @@
+A repo made to learn about prisma by creating a simple todo app
