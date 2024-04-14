@@ -1,52 +1,37 @@
-import { PrismaClient } from "@prisma/client";
-import { string } from "zod";
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient();
 
-async function insertUser(username:string,password:string,firstName:string,lastName:string) {
-    const res = await prisma.user.create({
-        data: {
-            username,
-            password,
-            firstName,
-            lastName,
-        }
-    })
-    console.log(res)
-}
-// insertUser("GouravJoshi","123456","Gourav","joshi");
-
-interface updateParams{
-    firstName:string,
-    lastName:string,
-}
-
-async function updateUser(username:string,{
-    firstName,
-    lastName,
-}:updateParams){
-    const res = await prisma.user.update({
-        where:{username},
+async function createTodo(userId:number,title:string,description:string) {
+    const todo = await prisma.todo.create({
         data:{
-            firstName,
-            lastName,
-        }
+            title,
+            description,
+            userId,
+        },
     });
-    console.log(res)
+    console.log(todo);
 }
 
-// updateUser("GouravJoshi",{
-//     firstName:"Gourav",
-//     lastName:"Joshi",
-// })
-
-async function getUser(username:string){
-    const res = await prisma.user.findFirst({
+async function getTodos(userId:number) {
+    const todos = await prisma.todo.findMany({
         where:{
-            username:username,
-        }
+            userId:userId,
+        },
     });
-    console.log(res);
+    console.log(todos);
 }
 
-// getUser("GouravJoshi");
+async function getTodosAndUserDetails(userId:number) {
+    const todos = await prisma.todo.findMany({
+        where:{
+            userId:userId,
+        },
+        select:{
+            user:true,
+            title:true,
+            description:true,
+        },
+    });
+    console.log(todos);
+}
